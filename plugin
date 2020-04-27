@@ -4,3 +4,8 @@ docker plugin install wetopi/rbd \
   RBD_CONF_POOL="kubernetes" \
   RBD_CONF_CLUSTER=ceph \
   RBD_CONF_KEYRING_USER=client.admin
+
+
+docker volume create -d wetopi/rbd -o size=206 my_rbd_volume
+
+docker volume ls
