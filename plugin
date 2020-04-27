@@ -1,0 +1,6 @@
+docker plugin install wetopi/rbd \
+  --alias=wetopi/rbd \
+  LOG_LEVEL=1 \
+  RBD_CONF_POOL="kubernetes" \
+  RBD_CONF_CLUSTER=ceph \
+  RBD_CONF_KEYRING_USER=client.admin
