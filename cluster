@@ -1,19 +1,46 @@
 mkdir -p /etc/ceph
 mkdir -p /var/lib/ceph
 
-docker run --name mon --net=host \
+docker run  -d --net=host \
+--restart always \
 -v /etc/ceph:/etc/ceph \
 -v /var/lib/ceph/:/var/lib/ceph/ \
 -e MON_IP=$1 \
--e CEPH_PUBLIC_NETWORK=172.17.0.0/24 \
+-e CEPH_PUBLIC_NETWORK=172.17.0.0/16 \
+--name="ceph-mon" \
 ceph/daemon mon
 
-docker run --name mgr --net=host \
+docker run -d --net=host \
+--privileged=true \
+--pid=host \
 -v /etc/ceph:/etc/ceph \
 -v /var/lib/ceph/:/var/lib/ceph/ \
+--name="ceph-mgr" \
+--restart=always \
 ceph/daemon mgr
 
+docker exec ceph-mon ceph auth get client.bootstrap-osd -o \
+/var/lib/ceph/bootstrap-osd/ceph.keyring
 
+docker run -d --net=host \
+--privileged=true \
+--pid=host \
+-v /etc/ceph:/etc/ceph \
+-v /var/lib/ceph/:/var/lib/ceph/ \
+-v /dev/:/dev/ \
+-e OSD_FORCE_ZAP=1 \
+-e OSD_DEVICE=$2 \
+-e OSD_TYPE=disk \
+--name="ceph-osd" \
+--restart=always \
+ceph/daemon osd_ceph_disk
 
-
-
+docker run -d --net=host \
+--name ceph-mds \
+--restart always \
+-v /var/lib/ceph/:/var/lib/ceph/ \
+-v /etc/ceph:/etc/ceph \
+-e CEPHFS_CREATE=1 \
+-e CEPHFS_DATA_POOL_PG=256 \
+-e CEPHFS_METADATA_POOL_PG=256 \
+ceph/daemon mds
