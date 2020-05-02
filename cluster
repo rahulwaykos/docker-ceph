@@ -8,7 +8,7 @@ docker run  -d --net=host \
 -e MON_IP=$1 \
 -e CEPH_PUBLIC_NETWORK=172.17.0.0/16 \
 --name="ceph-mon" \
-ceph/daemon mon
+ceph/daemon:latest-mimic mon
 
 docker run -d --net=host \
 --privileged=true \
@@ -17,7 +17,7 @@ docker run -d --net=host \
 -v /var/lib/ceph/:/var/lib/ceph/ \
 --name="ceph-mgr" \
 --restart=always \
-ceph/daemon mgr
+ceph/daemon:latest-mimic mgr
 
 sleep 30
 docker exec ceph-mon ceph auth get client.bootstrap-osd -o \
@@ -34,7 +34,7 @@ docker run -d --net=host \
 -e OSD_TYPE=disk \
 --name="ceph-osd" \
 --restart=always \
-ceph/daemon osd_ceph_disk
+ceph/daemon:latest-mimic osd_ceph_disk
 
 docker run -d --net=host \
 --name ceph-mds \
@@ -44,4 +44,4 @@ docker run -d --net=host \
 -e CEPHFS_CREATE=1 \
 -e CEPHFS_DATA_POOL_PG=256 \
 -e CEPHFS_METADATA_POOL_PG=256 \
-ceph/daemon mds
+ceph/daemon:latest-mimic mds
