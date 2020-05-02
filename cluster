@@ -1,20 +1,25 @@
 mkdir -p /etc/ceph
 mkdir -p /var/lib/ceph
 
-docker run -d --net=host \
+docker run --name mon --net=host \
 -v /etc/ceph:/etc/ceph \
 -v /var/lib/ceph/:/var/lib/ceph/ \
 -e MON_IP=$1 \
 -e CEPH_PUBLIC_NETWORK=172.17.0.0/24 \
 ceph/daemon mon
 
-docker run -d --net=host \
+docker run --name mgr --net=host \
 -v /etc/ceph:/etc/ceph \
 -v /var/lib/ceph/:/var/lib/ceph/ \
 ceph/daemon mgr
 
+docker run --name mds --net=host \
+-v /var/lib/ceph/:/var/lib/ceph \
+-v /etc/ceph:/etc/ceph \
+-e CEPHFS_CREATE=1 \
+ceph-daemon mds
 
-docker run -d --net=host \
+docker run --name osd --net=host \
 --pid=host \
 --privileged=true \
 -v /etc/ceph:/etc/ceph \
@@ -23,5 +28,6 @@ docker run -d --net=host \
 -v /run/udev/:/run/udev/ \
 -e OSD_DEVICE=$2 \
 ceph/daemon osd
+
 
 
