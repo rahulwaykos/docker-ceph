@@ -19,15 +19,6 @@ docker run --name mds --net=host \
 -e CEPHFS_CREATE=1 \
 ceph-daemon mds
 
-docker run --name osd --net=host \
---pid=host \
---privileged=true \
--v /etc/ceph:/etc/ceph \
--v /var/lib/ceph/:/var/lib/ceph/ \
--v /dev/:/dev/ \
--v /run/udev/:/run/udev/ \
--e OSD_DEVICE=$2 \
-ceph/daemon osd
 
 
 
