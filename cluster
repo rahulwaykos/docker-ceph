@@ -19,6 +19,7 @@ docker run -d --net=host \
 --restart=always \
 ceph/daemon mgr
 
+sleep 30
 docker exec ceph-mon ceph auth get client.bootstrap-osd -o \
 /var/lib/ceph/bootstrap-osd/ceph.keyring
 
