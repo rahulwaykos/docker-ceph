@@ -23,7 +23,9 @@
  ceph auth get-or-create client.docker osd 'allow rw pool=docker_vol' mon 'allow r'  -o /etc/ceph/ceph.client.docker.keyring
  ```
  Copy above generated keyring and ceph.conf file to docker client. Install ceph-common package to run ceph commands on docker machine. Move all copied files to the /etc/ceph/ directory. Now run following command 
- ![lspools]()
+ 
+ ![lspools](https://raw.githubusercontent.com/rahulwaykos/docker-ceph/master/Screenshot_2020-07-11_00-40-46.png)
+ 
  Next step is to install plugin for docker:
  ```
  docker plugin install wetopi/rbd \
@@ -34,9 +36,12 @@
   RBD_CONF_KEYRING_USER=client.docker
   ```
   Check it it is installed:
-  ![plugin]()
-  Now create volume with following command:
-  ![volume-ls]()
+ 
+ ![plugin](https://raw.githubusercontent.com/rahulwaykos/docker-ceph/master/plugin.png)
+
+Now create volume with following command:
+
+ ![volume-ls](https://raw.githubusercontent.com/rahulwaykos/docker-ceph/master/volume-ls.png)
   
   Note: If volume create command some-how fails, please consider disabling some rbd features on client machine.
   
